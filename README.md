@@ -31,7 +31,7 @@ NeuroAI is a web-based chatbot designed to provide a seamless and interactive co
 
 ## 🚀 Live Demo
 
-Experience NeuroAI live here: [**NeuroAI**](https://www.google.com/search?q=https://NeuroAI.vercel.app)
+Experience NeuroAI live here: [**NeuroAI**](https://www.google.com/search?q=https://TheNeuroAI.vercel.app)
 
  <div align="center">
  <p>
