@@ -1,0 +1,68 @@
+.sidebar {
+  width: 240px;
+  background: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.closed {
+  margin-left: -240px;
+}
+
+.menuToggle {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.hamburger > div {
+  width: 20px;
+  height: 2px;
+  background: #7c3aed;
+  margin: 4px 0;
+}
+
+.navItems {
+  flex-grow: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(124, 58, 237, 0.05);
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.3s ease;
+}
+
+.navItem:hover {
+  background: rgba(124, 58, 237, 0.15);
+}
+
+.addIcon {
+  font-size: 20px;
+  color: #7c3aed;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 600;
+}
