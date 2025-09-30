@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Assistant } from "./assistants/googleai";
 import { Loader } from "./components/Loader/Loader";
 import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider, ThemeContext } from "./contexts/ThemeContext";
 import styles from "./App.module.css";
 
-function App() {
+function AppContent() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +141,6 @@ useEffect(() => {
   }
 
   return (
-    <ThemeProvider>
       <div className={styles.App}>
         {isLoading && <Loader />}
         <Sidebar 
@@ -171,6 +171,13 @@ useEffect(() => {
               </div>
             </div>
             <div className={styles.headerRight}>
+              <button 
+                className={styles.themeToggle}
+                onClick={toggleTheme}
+                title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              >
+                {theme === 'light' ? '🌙' : '☀️'}
+              </button>
               <div className={styles.statusIndicator}>
                 <div className={`${styles.statusDot} ${isStreaming ? styles.streaming : styles.ready}`}></div>
                 <span>{isStreaming ? 'Responding...' : 'Ready'}</span>
@@ -190,6 +197,13 @@ useEffect(() => {
           />
         </div>
       </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
     </ThemeProvider>
   );
 }

@@ -1,7 +1,7 @@
 .App {
   display: flex;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
@@ -11,10 +11,10 @@
   flex-direction: column;
   flex-grow: 1;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-secondary);
   backdrop-filter: blur(20px);
   transition: all 0.4s ease;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 25px 50px var(--shadow-primary);
   overflow: hidden;
   width: calc(100vw - 240px);
 }
@@ -30,10 +30,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--bg-tertiary);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-primary);
   position: relative;
+  z-index: 10000;
 }
 
 .Header::before {
@@ -43,7 +44,8 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+  opacity: 0.3;
 }
 
 .headerLeft {
@@ -100,7 +102,7 @@
 .logoText {
   font-size: 20px;
   font-weight: 700;
-  background: linear-gradient(45deg, #7c3aed, #3b82f6);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -112,16 +114,42 @@
   gap: 16px;
 }
 
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.themeToggle:hover {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.themeToggle:active {
+  transform: translateY(0);
+}
+
 .statusIndicator {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--bg-tertiary);
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .statusDot {
@@ -132,11 +160,11 @@
 }
 
 .statusDot.ready {
-  background: #10b981;
+  background: var(--status-ready);
 }
 
 .statusDot.streaming {
-  background: #f59e0b;
+  background: var(--status-streaming);
   animation: pulse 1s infinite;
 }
 
