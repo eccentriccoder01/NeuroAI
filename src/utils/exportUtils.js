@@ -1,134 +1,126 @@
-export function exportAsText(messages, title = "NeuroAI Chat") {
-  if (!messages || messages.length === 0) {
-    alert('No messages to export!');
-    return;
-  }
+import jsPDF from 'jspdf';
 
-  const timestamp = new Date().toLocaleString();
-  let textContent = `${title}\nExported on: ${timestamp}\n\n`;
-  
-  messages.forEach((message, index) => {
-    const role = message.role === 'user' ? 'You' : 
-                 message.role === 'assistant' ? 'NeuroAI' : 'System';
-    textContent += `${role}: ${message.content}\n\n`;
-  });
-
-  // Create and download the text file
-  const blob = new Blob([textContent], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${title.replace(/[^\w\s]/gi, '')}_${Date.now()}.txt`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-export function exportAsPDF(messages, title = "NeuroAI Chat") {
-  if (!messages || messages.length === 0) {
-    alert('No messages to export!');
-    return false;
-  }
-
+// Export conversation as text file
+export function exportAsText(messages, sessionTitle = "NeuroAI Chat") {
   try {
-    // Simple PDF export using browser's print functionality
-    const timestamp = new Date().toLocaleString();
-    
-    // Create a new window with the chat content
-    const printWindow = window.open('', '_blank');
-    
-    let htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${title}</title>
-          <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-              line-height: 1.6;
-              max-width: 800px;
-              margin: 0 auto;
-              padding: 20px;
-              color: #333;
-            }
-            .header {
-              text-align: center;
-              border-bottom: 2px solid #007acc;
-              padding-bottom: 20px;
-              margin-bottom: 30px;
-            }
-            .message {
-              margin-bottom: 20px;
-              padding: 15px;
-              border-radius: 8px;
-              border-left: 4px solid #007acc;
-            }
-            .user {
-              background-color: #f0f8ff;
-              border-left-color: #007acc;
-            }
-            .assistant {
-              background-color: #f8f9fa;
-              border-left-color: #28a745;
-            }
-            .system {
-              background-color: #fff3cd;
-              border-left-color: #ffc107;
-            }
-            .role {
-              font-weight: bold;
-              margin-bottom: 8px;
-              color: #495057;
-            }
-            .content {
-              white-space: pre-wrap;
-              word-wrap: break-word;
-            }
-            @media print {
-              body { margin: 0; }
-              .message { break-inside: avoid; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>${title}</h1>
-            <p>Exported on: ${timestamp}</p>
-          </div>
-    `;
+    let content = `${sessionTitle}\n`;
+    content += `Export Date: ${new Date().toLocaleString()}\n`;
+    content += `${'='.repeat(50)}\n\n`;
 
-    messages.forEach((message) => {
-      const roleClass = message.role || 'system';
-      const roleName = message.role === 'user' ? 'You' : 
-                      message.role === 'assistant' ? 'NeuroAI' : 'System';
+    messages.forEach((message, index) => {
+      const role = message.role === 'user' ? 'You' : 
+                   message.role === 'assistant' ? 'NeuroAI' : 'System';
       
-      htmlContent += `
-        <div class="message ${roleClass}">
-          <div class="role">${roleName}:</div>
-          <div class="content">${message.content.replace(/\n/g, '<br>')}</div>
-        </div>
-      `;
+      content += `[${role}]\n`;
+      content += `${message.content}\n\n`;
+      
+      if (index < messages.length - 1) {
+        content += `${'-'.repeat(30)}\n\n`;
+      }
     });
 
-    htmlContent += `
-        </body>
-      </html>
-    `;
-
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
+    // Create and download the file
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${sessionTitle.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     
-    // Wait for content to load, then print
-    printWindow.onload = function() {
-      printWindow.print();
-      printWindow.close();
-    };
+    console.log('Text file exported successfully');
+  } catch (error) {
+    console.error('Error exporting text file:', error);
+    alert('Failed to export text file. Please try again.');
+  }
+}
 
+// Export conversation as PDF
+export function exportAsPDF(messages, sessionTitle = "NeuroAI Chat") {
+  try {
+    console.log('Starting PDF export...', { messages: messages.length, title: sessionTitle });
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let y = margin;
+
+    // Add title
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(sessionTitle, margin, y);
+    y += 20;
+
+    // Add export date
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Export Date: ${new Date().toLocaleString()}`, margin, y);
+    y += 20;
+
+    // Add messages
+    messages.forEach((message, index) => {
+      const role = message.role === 'user' ? 'You' : 
+                   message.role === 'assistant' ? 'NeuroAI' : 'System';
+      
+      // Check if we need a new page
+      if (y > pageHeight - 40) {
+        doc.addPage();
+        y = margin;
+      }
+
+      // Add role header
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(`[${role}]`, margin, y);
+      y += 15;
+
+      // Add message content - split long text into multiple lines
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      
+      const content = message.content || '';
+      const maxWidth = pageWidth - 2 * margin;
+      const lines = doc.splitTextToSize(content, maxWidth);
+      
+      // Add each line, checking for page breaks
+      lines.forEach(line => {
+        if (y > pageHeight - 20) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.text(line, margin, y);
+        y += 6;
+      });
+      
+      y += 10; // Space between messages
+
+      // Add separator line (except for last message)
+      if (index < messages.length - 1) {
+        if (y > pageHeight - 15) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 15;
+      }
+    });
+
+    // Save the PDF
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `${sessionTitle.replace(/[^a-z0-9]/gi, '_')}_${timestamp}.pdf`;
+    
+    console.log('Saving PDF as:', fileName);
+    doc.save(fileName);
+    
+    console.log('PDF exported successfully');
     return true;
   } catch (error) {
-    console.error('PDF export failed:', error);
-    alert('Failed to export as PDF. Please try again.');
+    console.error('Error exporting PDF:', error);
+    alert(`Failed to export PDF: ${error.message}`);
     return false;
   }
 }

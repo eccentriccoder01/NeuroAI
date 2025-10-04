@@ -4,7 +4,7 @@ import { Loader } from "./components/Loader/Loader";
 import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import { ThemeProvider, ThemeContext } from "./contexts/ThemeContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { exportAsText, exportAsPDF } from "./utils/exportUtils";
 import styles from "./App.module.css";
 
@@ -145,6 +145,8 @@ useEffect(() => {
     }
   }
 
+
+
   async function handleContentSend(content) {
     addMessage({ content, role: "user" });
     setIsLoading(true);
@@ -209,13 +211,6 @@ useEffect(() => {
               </div>
             </div>
             <div className={styles.headerRight}>
-              <button 
-                className={styles.themeToggle}
-                onClick={toggleTheme}
-                title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              >
-                {theme === 'light' ? '🌙' : '☀️'}
-              </button>
               <div className={styles.exportMenu}>
                 <button 
                   className={styles.exportButton}

@@ -173,6 +173,101 @@
   50% { opacity: 0.5; }
 }
 
+/* Export Menu Styles */
+.exportMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.exportBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 99998;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 12px;
+  color: #7c3aed;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exportButton:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.exportDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 99999;
+  min-width: 220px;
+  animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exportOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.exportOption:last-child {
+  border-bottom: none;
+}
+
+.exportOption:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.05);
+  color: #7c3aed;
+}
+
+.exportOption:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #9ca3af;
+}
+
 .ChatContainer {
   flex-grow: 1;
   width: 100%;
