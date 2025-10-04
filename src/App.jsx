@@ -5,6 +5,7 @@ import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { ThemeProvider, ThemeContext } from "./contexts/ThemeContext";
+import { exportAsText, exportAsPDF } from "./utils/exportUtils";
 import styles from "./App.module.css";
 
 function AppContent() {
@@ -17,6 +18,7 @@ function AppContent() {
   const [chatSessions, setChatSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   useEffect(() => {
   localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
 }, [chatSessions]);
@@ -42,6 +44,20 @@ useEffect(() => {
     startNewChat();
   }
 }, []);
+
+  // Close export dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (exportDropdownOpen && !event.target.closest(`.${styles.exportMenu}`)) {
+        setExportDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [exportDropdownOpen]);
 
   function updateLastMessageContent(content) {
     setMessages((prevMessages) =>
@@ -107,6 +123,28 @@ useEffect(() => {
     }
   }
 
+  // Export functions
+  function handleExportCurrentAsText() {
+    console.log('Exporting as text...', { messagesCount: messages.length });
+    const currentSession = chatSessions.find(s => s.id === currentSessionId);
+    const title = currentSession?.title || "NeuroAI Chat";
+    exportAsText(messages, title);
+  }
+
+  function handleExportCurrentAsPDF() {
+    console.log('Exporting as PDF...', { messagesCount: messages.length });
+    if (messages.length === 0) {
+      alert('No messages to export!');
+      return;
+    }
+    const currentSession = chatSessions.find(s => s.id === currentSessionId);
+    const title = currentSession?.title || "NeuroAI Chat";
+    const success = exportAsPDF(messages, title);
+    if (success) {
+      console.log('PDF export completed successfully');
+    }
+  }
+
   async function handleContentSend(content) {
     addMessage({ content, role: "user" });
     setIsLoading(true);
@@ -129,7 +167,7 @@ useEffect(() => {
       }
 
       setIsStreaming(false);
-    } catch (error) {
+    } catch {
       addMessage({
         content: "Sorry, I couldn't process your request. Please try again!",
         role: "system",
@@ -178,6 +216,45 @@ useEffect(() => {
               >
                 {theme === 'light' ? '🌙' : '☀️'}
               </button>
+              <div className={styles.exportMenu}>
+                <button 
+                  className={styles.exportButton}
+                  onClick={() => setExportDropdownOpen(!exportDropdownOpen)}
+                  title="Export Conversation"
+                >
+                  📥 Export
+                </button>
+                {exportDropdownOpen && (
+                  <>
+                    <div 
+                      className={styles.exportBackdrop}
+                      onClick={() => setExportDropdownOpen(false)}
+                    />
+                    <div className={styles.exportDropdown}>
+                      <button 
+                        onClick={() => {
+                          handleExportCurrentAsText();
+                          setExportDropdownOpen(false);
+                        }}
+                        className={styles.exportOption}
+                        disabled={messages.length === 0}
+                      >
+                        📄 Current Chat as Text
+                      </button>
+                      <button 
+                        onClick={() => {
+                          handleExportCurrentAsPDF();
+                          setExportDropdownOpen(false);
+                        }}
+                        className={styles.exportOption}
+                        disabled={messages.length === 0}
+                      >
+                        📑 Current Chat as PDF
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
               <div className={styles.statusIndicator}>
                 <div className={`${styles.statusDot} ${isStreaming ? styles.streaming : styles.ready}`}></div>
                 <span>{isStreaming ? 'Responding...' : 'Ready'}</span>

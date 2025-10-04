@@ -219,6 +219,82 @@
   }
 }
 
+/* Export Menu Styles */
+.exportMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.exportButton {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exportButton:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-purple);
+  transform: translateY(-1px);
+}
+
+.exportDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px var(--shadow-primary);
+  z-index: 1000;
+  min-width: 200px;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+.exportOption {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exportOption:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  color: var(--accent-purple);
+}
+
+.exportOption:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.exportBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .mainContent {
