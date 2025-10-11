@@ -1,0 +1,19 @@
+.themeToggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  margin-right: 6px;
+}
+
+.themeToggle:hover {
+  background: var(--button-hover-bg);
+  transform: rotate(12deg);
+}
