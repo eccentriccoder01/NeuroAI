@@ -3,9 +3,10 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  background: rgba(255, 255, 255, 0.85);
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
   backdrop-filter: blur(16px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .quickReplies {
@@ -15,18 +16,19 @@
 }
 
 .quickReplyButton {
-  background: rgba(124, 58, 237, 0.1);
+  background: var(--accent-bg);
   border: none;
   border-radius: 10px;
   padding: 6px 12px;
   font-size: 14px;
-  color: #7c3aed;
+  color: var(--accent-color);
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .quickReplyButton:hover {
-  background: rgba(124, 58, 237, 0.2);
+  background: var(--button-hover-bg);
 }
 
 .inputSection {
@@ -39,11 +41,12 @@
   flex-grow: 1;
   display: flex;
   align-items: flex-end;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-chat-input);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 8px 12px;
   position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .TextArea {
@@ -55,6 +58,8 @@
   padding: 8px;
   outline: none;
   background: transparent;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .attachmentButton,
@@ -66,14 +71,15 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 8px;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
 }
 
 .attachmentButton:hover,
 .emojiButton:hover,
 .voiceButton:hover,
 .sendButton:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--button-hover-bg);
 }
 
 .emojiContainer {

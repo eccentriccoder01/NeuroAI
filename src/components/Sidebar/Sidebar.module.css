@@ -1,13 +1,14 @@
 .sidebar {
   width: 240px;
-  background: white;
+  background: var(--bg-sidebar);
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
-  transition: 0.3s ease;
-  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border-right: 1px solid var(--border-color);
+  color: var(--text-secondary);
 }
 
 .closed {
@@ -27,13 +28,13 @@
 }
 
 .menuToggle:hover {
-  background: rgba(124, 58, 237, 0.1);
+  background: var(--button-hover-bg);
 }
 
 .hamburger > div {
   width: 20px;
   height: 2px;
-  background: #7c3aed;
+  background: var(--text-secondary);
   margin: 4px 0;
 }
 

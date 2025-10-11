@@ -6,6 +6,8 @@
   padding: 24px;
   position: relative;
   scroll-behavior: smooth;
+  background: var(--bg-chat);
+  transition: background-color 0.3s ease;
 }
 
 .Chat::-webkit-scrollbar {
@@ -46,15 +48,15 @@
 .quickActions {
   margin-top: 24px;
   padding: 20px;
-  background: rgba(124, 58, 237, 0.05);
+  background: var(--accent-bg);
   border-radius: 16px;
-  border: 1px solid rgba(124, 58, 237, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .quickActionTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
@@ -66,21 +68,21 @@
 
 .actionButton {
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: var(--bg-chat-input);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-primary);
   text-align: left;
 }
 
 .actionButton:hover {
-  background: rgba(124, 58, 237, 0.1);
+  background: var(--button-hover-bg);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.1);
 }
 
 .Group {
@@ -141,17 +143,17 @@
 }
 
 .userBubble {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, #a855f7 100%);
   color: white;
   border-top-right-radius: 8px;
   box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
 }
 
 .botBubble {
-  background: rgba(255, 255, 255, 0.9);
-  color: #374151;
+  background: var(--bg-chat-input);
+  color: var(--text-primary);
   border-top-left-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
@@ -175,8 +177,8 @@
 }
 
 .codeBlock {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 16px;
   border-radius: 12px;
   margin: 12px 0;
@@ -184,14 +186,15 @@
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 13px;
   line-height: 1.5;
+  border: 1px solid var(--border-color);
 }
 
 .blockquote {
-  border-left: 4px solid #7c3aed;
+  border-left: 4px solid var(--accent-color);
   padding-left: 16px;
   margin: 12px 0;
   font-style: italic;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .messageActions {
@@ -378,39 +381,43 @@
 }
 
 /* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .botBubble {
-    background: rgba(30, 41, 59, 0.9);
-    color: #e2e8f0;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .quickActions {
-    background: rgba(124, 58, 237, 0.1);
-    border-color: rgba(124, 58, 237, 0.2);
-  }
-  
-  .quickActionTitle {
-    color: #e2e8f0;
-  }
-  
-  .actionButton {
-    background: rgba(30, 41, 59, 0.8);
-    color: #e2e8f0;
-    border-color: rgba(124, 58, 237, 0.3);
-  }
-  
-  .actionButton:hover {
-    background: rgba(124, 58, 237, 0.2);
-  }
-  
-  .reactionPanel {
-    background: #1e293b;
-    color: #e2e8f0;
-  }
-  
-  .reactionDisplay {
-    background: #1e293b;
-    color: #e2e8f0;
-  }
+[data-theme="dark"] .botBubble {
+  background: rgba(30, 41, 59, 0.9);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .codeBlock {
+  background: #131a2a;
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .quickActions {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="dark"] .quickActionTitle {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .actionButton {
+  background: rgba(30, 41, 59, 0.8);
+  color: #e2e8f0;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+[data-theme="dark"] .actionButton:hover {
+  background: rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="dark"] .reactionPanel {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .reactionDisplay {
+  background: #1e293b;
+  color: #e2e8f0;
 }
