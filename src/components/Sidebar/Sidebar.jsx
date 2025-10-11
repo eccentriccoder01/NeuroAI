@@ -15,7 +15,7 @@ export function Sidebar({ isOpen, toggleSidebar, startNewChat }) {
       <div className={styles.navItems}>
         <div className={styles.navItem} onClick={startNewChat}>
           <div className={styles.addIcon}>+</div>
-          <span>New Chat</span>
+           {isOpen && <span>New Chat</span>}
         </div>
       </div>
       
@@ -23,9 +23,11 @@ export function Sidebar({ isOpen, toggleSidebar, startNewChat }) {
         <div className={styles.avatar}>
           <img src="/chat-bot.png" alt="Bot" />
         </div>
-        <div className={styles.username}>
-          <strong>NeuroAI</strong>
-        </div>
+        {isOpen && (
+          <div className={styles.username}>
+            <strong>NeuroAI</strong>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -36,3 +38,5 @@ Sidebar.propTypes = {
   toggleSidebar: PropTypes.func.isRequired,
   startNewChat: PropTypes.func.isRequired,
 };
+
+

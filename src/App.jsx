@@ -195,7 +195,7 @@ useEffect(() => {
         <div className={`${styles.mainContent} ${!sidebarOpen ? styles.sidebarClosed : ''}`}>
           <header className={styles.Header}>
             <div className={styles.headerLeft}>
-              <button 
+              {/* <button 
                 className={styles.menuButton}
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
@@ -204,7 +204,7 @@ useEffect(() => {
                   <span></span>
                   <span></span>
                 </div>
-              </button>
+              </button> */}
               <div className={styles.logo}>
                 <img src="/logo.png" alt="NeuroAI" />
                 <span className={styles.logoText}>NeuroAI</span>
