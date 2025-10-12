@@ -17,6 +17,7 @@ function App() {
   const [chatSessions, setChatSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [content, setContent] = useState("");
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   useEffect(() => {
   localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
@@ -261,11 +262,14 @@ useEffect(() => {
               messages={messages} 
               isTyping={isTyping}
               isStreaming={isStreaming}
+              setContent={setContent}
             />
           </div>
           <Controls
             isDisabled={isLoading || isStreaming}
             onSend={handleContentSend}
+            content={content}
+            setContent={setContent}
           />
         </div>
       </div>

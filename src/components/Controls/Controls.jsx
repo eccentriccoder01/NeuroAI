@@ -3,9 +3,9 @@ import TextareaAutosize from "react-textarea-autosize";
 import styles from "./Controls.module.css";
 import PropTypes from "prop-types";
 
-export function Controls({ isDisabled = false, onSend }) {
+export function Controls({ isDisabled = false, onSend, content, setContent }) {
   const textareaRef = useRef(null);
-  const [content, setContent] = useState("");
+  
   const [isRecording, setIsRecording] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [wordCount, setWordCount] = useState(0);
@@ -85,7 +85,7 @@ export function Controls({ isDisabled = false, onSend }) {
           </button>
         ))}
       </div>
-
+ 
       {/* Main Input Area */}
       <div className={styles.inputSection}>
         <div className={styles.TextAreaContainer}>
