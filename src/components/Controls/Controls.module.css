@@ -57,6 +57,20 @@
   background: transparent;
 }
 
+.TextArea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.TextArea:not(:disabled) {
+  cursor: text;
+}
+
+.TextArea:not(:disabled):focus {
+  outline: none;
+  background: transparent;
+}
+
 .attachmentButton,
 .emojiButton,
 .voiceButton,
