@@ -9,6 +9,11 @@ export function Controls({ isDisabled = false, onSend }) {
   const [isRecording, setIsRecording] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [wordCount, setWordCount] = useState(0);
+  
+  // Debug logging for disabled state
+  useEffect(() => {
+    console.log('Controls disabled state:', isDisabled);
+  }, [isDisabled]);
 
   const quickReplies = [
     "👋 Hello!",
@@ -21,8 +26,14 @@ export function Controls({ isDisabled = false, onSend }) {
   const emojis = ["😊", "👍", "❤️", "🎉", "🤔", "💡", "🔥", "⭐", "🚀", "🎯"];
 
   useEffect(() => {
-    if (!isDisabled) {
-      textareaRef.current?.focus();
+    if (!isDisabled && textareaRef.current) {
+      // Ensure the textarea is properly enabled and focusable
+      textareaRef.current.disabled = false;
+      textareaRef.current.focus();
+      console.log('TextArea focused and enabled');
+    } else if (isDisabled && textareaRef.current) {
+      textareaRef.current.disabled = true;
+      console.log('TextArea disabled');
     }
   }, [isDisabled]);
 
