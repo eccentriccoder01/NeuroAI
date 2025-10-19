@@ -2,12 +2,40 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #333;
-  background: #f6f6f6;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* light mode variables */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bg-chat: #f8fafc;
+  --bg-chat-input: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #4a5568;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --accent-color: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-bg: rgba(124, 58, 237, 0.15);
+  --button-hover-bg: rgba(124, 58, 237, 0.1);
+}
+
+/* dark mode variables */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-sidebar: #151a30;
+  --bg-chat: #232750;
+  --bg-chat-input: #1d2040;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --accent-color: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-bg: rgba(139, 92, 246, 0.2);
+  --button-hover-bg: rgba(139, 92, 246, 0.25);
 }
 
 * {
@@ -20,6 +48,9 @@ body {
   width: 100%;
   min-height: 100vh;
   margin: 0;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* This is to ensure full width for our application */

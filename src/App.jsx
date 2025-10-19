@@ -5,6 +5,7 @@ import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
 import { exportAsText, exportAsPDF } from "./utils/exportUtils";
 import styles from "./App.module.css";
 
@@ -212,6 +213,7 @@ useEffect(() => {
               </div>
             </div>
             <div className={styles.headerRight}>
+              <ThemeToggle />
               <div className={styles.exportMenu}>
                 <button 
                   className={styles.exportButton}
