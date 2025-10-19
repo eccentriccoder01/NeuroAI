@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Assistant } from "./assistants/googleai";
 import { Loader } from "./components/Loader/Loader";
 import { Chat } from "./components/Chat/Chat";
@@ -8,8 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { exportAsText, exportAsPDF } from "./utils/exportUtils";
 import styles from "./App.module.css";
 
-function AppContent() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+function App() {
   const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -182,6 +181,7 @@ useEffect(() => {
   }
 
   return (
+    <ThemeProvider>
       <div className={styles.App}>
         {isLoading && <Loader />}
         <Sidebar 
@@ -273,13 +273,6 @@ useEffect(() => {
           />
         </div>
       </div>
-  );
-}
-
-function App() {
-  return (
-    <ThemeProvider>
-      <AppContent />
     </ThemeProvider>
   );
 }

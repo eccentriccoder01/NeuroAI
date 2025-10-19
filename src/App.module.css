@@ -1,7 +1,7 @@
 .App {
   display: flex;
   height: 100vh;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
@@ -11,10 +11,10 @@
   flex-direction: column;
   flex-grow: 1;
   height: 100vh;
-  background: var(--bg-secondary);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   transition: all 0.4s ease;
-  box-shadow: 0 25px 50px var(--shadow-primary);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   width: calc(100vw - 240px);
 }
@@ -30,9 +30,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 10000;
 }
@@ -44,8 +44,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
-  opacity: 0.3;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
 }
 
 .headerLeft {
@@ -102,7 +101,7 @@
 .logoText {
   font-size: 20px;
   font-weight: 700;
-  background: var(--gradient-text);
+  background: linear-gradient(45deg, #7c3aed, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -114,42 +113,16 @@
   gap: 16px;
 }
 
-.themeToggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-primary);
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-}
-
-.themeToggle:hover {
-  background: var(--accent-purple);
-  border-color: var(--accent-purple);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
-
-.themeToggle:active {
-  transform: translateY(0);
-}
-
 .statusIndicator {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: #64748b;
 }
 
 .statusDot {
@@ -160,11 +133,11 @@
 }
 
 .statusDot.ready {
-  background: var(--status-ready);
+  background: #10b981;
 }
 
 .statusDot.streaming {
-  background: var(--status-streaming);
+  background: #f59e0b;
   animation: pulse 1s infinite;
 }
 
@@ -312,82 +285,6 @@
   .statusIndicator {
     display: none;
   }
-}
-
-/* Export Menu Styles */
-.exportMenu {
-  position: relative;
-  display: inline-block;
-}
-
-.exportButton {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.exportButton:hover {
-  background: var(--bg-secondary);
-  border-color: var(--accent-purple);
-  transform: translateY(-1px);
-}
-
-.exportDropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px var(--shadow-primary);
-  z-index: 1000;
-  min-width: 200px;
-  padding: 8px;
-  margin-top: 4px;
-}
-
-.exportOption {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  padding: 10px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  text-align: left;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.exportOption:hover:not(:disabled) {
-  background: var(--bg-secondary);
-  color: var(--accent-purple);
-}
-
-.exportOption:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.exportBackdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
 }
 
 /* Dark mode support */
