@@ -20,31 +20,33 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [content, setContent] = useState("");
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
-  useEffect(() => {
-  localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
-}, [chatSessions]);
+  const [abortController, setAbortController] = useState(null);
 
-useEffect(() => {
-  const savedSessions = localStorage.getItem("chatSessions");
-  if (savedSessions) {
-    try {
-      const sessions = JSON.parse(savedSessions);
-      if (Array.isArray(sessions) && sessions.length > 0) {
-        setChatSessions(sessions);
-        setCurrentSessionId(sessions[0].id);
-        setMessages(sessions[0].messages || []);
-      } else {
+  useEffect(() => {
+    localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
+  }, [chatSessions]);
+
+  useEffect(() => {
+    const savedSessions = localStorage.getItem("chatSessions");
+    if (savedSessions) {
+      try {
+        const sessions = JSON.parse(savedSessions);
+        if (Array.isArray(sessions) && sessions.length > 0) {
+          setChatSessions(sessions);
+          setCurrentSessionId(sessions[0].id);
+          setMessages(sessions[0].messages || []);
+        } else {
+          startNewChat();
+        }
+      } catch (err) {
+        console.error("Failed to parse chatSessions from localStorage:", err);
+        localStorage.removeItem("chatSessions");
         startNewChat();
       }
-    } catch (err) {
-      console.error("Failed to parse chatSessions from localStorage:", err);
-      localStorage.removeItem("chatSessions");
+    } else {
       startNewChat();
     }
-  } else {
-    startNewChat();
-  }
-}, []);
+  }, []);
 
   // Close export dropdown when clicking outside
   useEffect(() => {
@@ -146,15 +148,16 @@ useEffect(() => {
     }
   }
 
-
-
   async function handleContentSend(content) {
     addMessage({ content, role: "user" });
     setIsLoading(true);
     setIsTyping(true);
-    
+
+    const controller = new AbortController();
+    setAbortController(controller);
+
     try {
-      const result = await assistant.chatStream(content, messages);
+      const result = await assistant.chatStream(content, messages, controller.signal);
       let isFirstChunk = false;
 
       for await (const chunk of result) {
@@ -165,19 +168,35 @@ useEffect(() => {
           setIsStreaming(true);
           setIsTyping(false);
         }
-
         updateLastMessageContent(chunk);
       }
 
       setIsStreaming(false);
-    } catch {
-      addMessage({
-        content: "Sorry, I couldn't process your request. Please try again!",
-        role: "system",
-      });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        console.log("Stream aborted by user.");
+      } else {
+        addMessage({
+          content: "Sorry, I couldn't process your request. Please try again!",
+          role: "system",
+        });
+      }
       setIsLoading(false);
       setIsStreaming(false);
       setIsTyping(false);
+    } finally {
+      setAbortController(null);
+    }
+  }
+
+  function handleStopGeneration() {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+      setIsStreaming(false);
+      setIsTyping(false);
+      setIsLoading(false);
+      console.log("Generation stopped!");
     }
   }
 
@@ -197,16 +216,6 @@ useEffect(() => {
         <div className={`${styles.mainContent} ${!sidebarOpen ? styles.sidebarClosed : ''}`}>
           <header className={styles.Header}>
             <div className={styles.headerLeft}>
-              {/* <button 
-                className={styles.menuButton}
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-              >
-                <div className={styles.hamburger}>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </button> */}
               <div className={styles.logo}>
                 <img src="/logo.png" alt="NeuroAI" />
                 <span className={styles.logoText}>NeuroAI</span>
@@ -268,8 +277,10 @@ useEffect(() => {
             />
           </div>
           <Controls
-            isDisabled={isLoading || isStreaming}
+            isDisabled={isLoading}
+            isGenerating={isStreaming}
             onSend={handleContentSend}
+            onStop={handleStopGeneration}
             content={content}
             setContent={setContent}
           />

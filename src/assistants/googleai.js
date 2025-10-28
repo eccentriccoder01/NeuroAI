@@ -19,14 +19,25 @@ export class Assistant {
     }
   }
 
-  async *chatStream(content) {
+  async *chatStream(content, messages, signal) {
     try {
       const result = await this.#chat.sendMessageStream(content);
 
       for await (const chunk of result.stream) {
+        // Check if the request was aborted
+        if (signal?.aborted) {
+          console.log("Stream aborted - stopping generation");
+          throw new DOMException("Aborted", "AbortError");
+        }
+        
         yield chunk.text();
       }
     } catch (error) {
+      // If it's an abort error, re-throw it
+      if (error.name === "AbortError") {
+        throw error;
+      }
+      // Otherwise, throw the original error
       throw error;
     }
   }
