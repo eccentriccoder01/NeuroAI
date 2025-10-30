@@ -3,7 +3,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import styles from "./Controls.module.css";
 import PropTypes from "prop-types";
 
-export function Controls({ isDisabled = false, onSend, content, setContent }) {
+export function Controls({ isDisabled = false, isGenerating = false, onSend, onStop, content, setContent }) {
   const textareaRef = useRef(null);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -57,16 +57,14 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
       };
 
       setRecognition(recognitionInstance);
-    } else {
-      alert("Speech recognition not supported in this browser");
     }
-  }, []);
+  }, [setContent]);
 
   useEffect(() => {
-    if (!isDisabled) {
+    if (!isDisabled && !isGenerating) {
       textareaRef.current?.focus();
     }
-  }, [isDisabled]);
+  }, [isDisabled, isGenerating]);
 
   useEffect(() => {
     const words = content
@@ -106,6 +104,11 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
   }
 
   function handleVoiceToggle() {
+    if (!recognition) {
+      alert("Speech recognition not supported in this browser");
+      return;
+    }
+
     const newState = !isRecording;
     setIsRecording(newState);
 
@@ -130,7 +133,7 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
             key={index}
             className={styles.quickReplyButton}
             onClick={() => handleQuickReply(reply)}
-            disabled={isDisabled}
+            disabled={isDisabled || isGenerating}
           >
             {reply}
           </button>
@@ -144,7 +147,7 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
           <button
             className={styles.attachmentButton}
             onClick={handleAttachment}
-            disabled={isDisabled}
+            disabled={isDisabled || isGenerating}
             title="Attach file"
           >
             <AttachmentIcon />
@@ -154,7 +157,7 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
           <TextareaAutosize
             ref={textareaRef}
             className={styles.TextArea}
-            disabled={isDisabled}
+            disabled={isDisabled || isGenerating}
             placeholder="Type your message here... (Shift + Enter for new line)"
             value={content}
             minRows={1}
@@ -168,7 +171,7 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
             <button
               className={styles.emojiButton}
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              disabled={isDisabled}
+              disabled={isDisabled || isGenerating}
               title="Add emoji"
             >
               😊
@@ -198,23 +201,34 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
               isRecording ? styles.recording : ""
             }`}
             onClick={handleVoiceToggle}
-            disabled={isDisabled}
+            disabled={isDisabled || isGenerating}
             title={isRecording ? "Stop recording" : "Voice input"}
           >
             <VoiceIcon isRecording={isRecording} />
           </button>
 
-          {/* Send Button */}
-          <button
-            className={`${styles.sendButton} ${
-              content.trim() ? styles.active : ""
-            }`}
-            disabled={isDisabled || !content.trim()}
-            onClick={handleContentSend}
-            title="Send message"
-          >
-            <SendIcon />
-          </button>
+          {/* Stop Generation Button - Shows when generating */}
+          {isGenerating ? (
+            <button
+              className={styles.stopButton}
+              onClick={onStop}
+              title="Stop Generation"
+            >
+              ⏹️
+            </button>
+          ) : (
+            /* Send Button - Shows when not generating */
+            <button
+              className={`${styles.sendButton} ${
+                content.trim() ? styles.active : ""
+              }`}
+              disabled={isDisabled || !content.trim()}
+              onClick={handleContentSend}
+              title="Send message"
+            >
+              <SendIcon />
+            </button>
+          )}
         </div>
       </div>
 
@@ -224,9 +238,14 @@ export function Controls({ isDisabled = false, onSend, content, setContent }) {
           {wordCount > 0 && `${wordCount} word${wordCount !== 1 ? "s" : ""}`}
         </div>
         <div className={styles.typing}>
-          {content && !isDisabled && (
+          {content && !isDisabled && !isGenerating && (
             <span className={styles.typingIndicator}>
               Press Enter to send, Shift+Enter for new line
+            </span>
+          )}
+          {isGenerating && (
+            <span className={styles.generatingIndicator}>
+              Generating response...
             </span>
           )}
         </div>
@@ -302,9 +321,14 @@ function SendIcon() {
     </svg>
   );
 }
+
 Controls.propTypes = {
   isDisabled: PropTypes.bool,
+  isGenerating: PropTypes.bool,
   onSend: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+  content: PropTypes.string.isRequired,
+  setContent: PropTypes.func.isRequired,
 };
 
 VoiceIcon.propTypes = {
