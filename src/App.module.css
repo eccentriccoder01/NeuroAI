@@ -176,27 +176,48 @@
   font-size: 14px;
   font-weight: 500;
   color: #64748b;
+  transition: all 0.3s ease;
 }
 
 .statusDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  animation: pulse 2s infinite;
+  transition: all 0.3s ease;
 }
 
 .statusDot.ready {
   background: #10b981;
+  box-shadow: 0 0 8px #10b981;
 }
 
 .statusDot.streaming {
+  background: #3b82f6;
+  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 8px #3b82f6;
+}
+
+.statusDot.checking {
   background: #f59e0b;
-  animation: pulse 1s infinite;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.statusDot.offline {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Export Menu Styles */
@@ -331,5 +352,20 @@
   .statusIndicator {
     background: rgba(15, 23, 42, 0.7);
     color: #94a3b8;
+  }
+  
+  .exportDropdown {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .exportOption {
+    color: #e2e8f0;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .exportOption:hover:not(:disabled) {
+    background: rgba(124, 58, 237, 0.1);
+    color: #a78bfa;
   }
 }

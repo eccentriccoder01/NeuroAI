@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Assistant } from "./assistants/googleai";
 import { Loader } from "./components/Loader/Loader";
 import { Chat } from "./components/Chat/Chat";
@@ -10,10 +10,12 @@ import { exportAsText, exportAsPDF } from "./utils/exportUtils";
 import styles from "./App.module.css";
 
 function App() {
-  const assistant = new Assistant();
+  const assistantRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isCheckingConnection, setIsCheckingConnection] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatSessions, setChatSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
@@ -21,6 +23,33 @@ function App() {
   const [content, setContent] = useState("");
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [abortController, setAbortController] = useState(null);
+
+  // Initialize assistant and connection monitoring
+  useEffect(() => {
+    assistantRef.current = new Assistant();
+    
+    // Check connection status initially
+    checkConnectionStatus();
+    
+    // Set up periodic connection checking
+    const connectionInterval = setInterval(checkConnectionStatus, 30000);
+    
+    return () => {
+      if (assistantRef.current) {
+        assistantRef.current.stopConnectionMonitoring();
+      }
+      clearInterval(connectionInterval);
+    };
+  }, []);
+
+  const checkConnectionStatus = async () => {
+    if (assistantRef.current) {
+      setIsCheckingConnection(true);
+      const connected = await assistantRef.current.checkOverallConnection();
+      setIsConnected(connected);
+      setIsCheckingConnection(false);
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
@@ -149,6 +178,14 @@ function App() {
   }
 
   async function handleContentSend(content) {
+    if (!isConnected) {
+      addMessage({
+        content: "Unable to connect. Please check your internet connection and try again.",
+        role: "system",
+      });
+      return;
+    }
+
     addMessage({ content, role: "user" });
     setIsLoading(true);
     setIsTyping(true);
@@ -157,7 +194,7 @@ function App() {
     setAbortController(controller);
 
     try {
-      const result = await assistant.chatStream(content, messages, controller.signal);
+      const result = await assistantRef.current.chatStream(content, messages, controller.signal);
       let isFirstChunk = false;
 
       for await (const chunk of result) {
@@ -176,8 +213,11 @@ function App() {
       if (err.name === "AbortError") {
         console.log("Stream aborted by user.");
       } else {
+        // Check connection status again in case of error
+        await checkConnectionStatus();
+        
         addMessage({
-          content: "Sorry, I couldn't process your request. Please try again!",
+          content: "Sorry, I couldn't process your request. Please check your connection and try again!",
           role: "system",
         });
       }
@@ -199,6 +239,22 @@ function App() {
       console.log("Generation stopped!");
     }
   }
+
+  // Get status text and styling
+  const getStatusInfo = () => {
+    if (isCheckingConnection) {
+      return { text: 'Checking connection...', className: styles.checking };
+    }
+    if (isStreaming) {
+      return { text: 'Responding...', className: styles.streaming };
+    }
+    if (isConnected) {
+      return { text: 'Ready', className: styles.ready };
+    }
+    return { text: 'Offline', className: styles.offline };
+  };
+
+  const statusInfo = getStatusInfo();
 
   return (
     <ThemeProvider>
@@ -228,6 +284,7 @@ function App() {
                   className={styles.exportButton}
                   onClick={() => setExportDropdownOpen(!exportDropdownOpen)}
                   title="Export Conversation"
+                  disabled={messages.length === 0}
                 >
                   📥 Export
                 </button>
@@ -263,8 +320,8 @@ function App() {
                 )}
               </div>
               <div className={styles.statusIndicator}>
-                <div className={`${styles.statusDot} ${isStreaming ? styles.streaming : styles.ready}`}></div>
-                <span>{isStreaming ? 'Responding...' : 'Ready'}</span>
+                <div className={`${styles.statusDot} ${statusInfo.className}`}></div>
+                <span>{statusInfo.text}</span>
               </div>
             </div>
           </header>
@@ -273,6 +330,7 @@ function App() {
               messages={messages} 
               isTyping={isTyping}
               isStreaming={isStreaming}
+              isConnected={isConnected}
               setContent={setContent}
             />
           </div>
