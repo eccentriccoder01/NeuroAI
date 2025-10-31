@@ -9,6 +9,10 @@
   transition: all 0.3s ease;
   border-right: 1px solid var(--border-color);
   color: var(--text-secondary);
+  position: fixed; /* Add this */
+  left: 0; /* Add this */
+  top: 0; /* Add this */
+  z-index: 1000; /* Add this to ensure sidebar is above content */
 }
 
 .closed {
@@ -16,6 +20,24 @@
   padding: 20px 10px;
 }
 
+/* Add these mobile styles */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default on mobile */
+  }
+  
+  .sidebar.closed {
+    transform: translateX(0); /* Show when closed (collapsed state) */
+    width: 70px;
+  }
+  
+  .sidebar:not(.closed) {
+    transform: translateX(0); /* Show when open */
+    width: 240px;
+  }
+}
+
+/* Rest of your existing sidebar styles remain the same */
 .menuToggle {
   display: flex;
   align-items: center;
